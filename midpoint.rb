@@ -40,6 +40,13 @@
 # Date        :   12/23/2010
 # Type        :   Tool
 #-----------------------------------------------------------------------------
+#
+# Special thanks to Rakesh K. Gupta for his original idea, which I am all too
+# happy to steal. Rakesh, it looks like Midpoint will *still* never die!
+# Bwhahahah!  ;-)
+#
+# Special thanks also to "Matt666" for his point.rb, on which this program is
+# based.
 
 class MidpointTool
   PLATFORM = (Object::RUBY_PLATFORM =~ /mswin/i) ? :windows : ((Object::RUBY_PLATFORM =~ /darwin/i) ? :mac : :other)
@@ -150,19 +157,6 @@ class MidpointTool
 				view.line_width = 3
 			end
     end
-=begin
-    if key == COPY_MODIFIER_KEY
-        if @draw_endpoints == true
-            @draw_endpoints = false
-            puts "Endpoint creation off."
-            self.set_prompt(@prompt) 
-        else
-            @draw_endpoints = true
-            puts "Endpoint creation on"
-            self.set_prompt(@prompt)
-        end
-    end
-=end
 	end
 
 	def onKeyUp(key, repeat, flags, view)
@@ -209,16 +203,14 @@ class MidpointTool
       @prompt = text
       Sketchup.status_text = text
   end
-	def create_geometry(p1, p2, view)
-		view.model.active_entities.add_cpoint(p1) if @state != 2
-		view.model.active_entities.add_cpoint(p2)
-	end
 
   def create_midpoint(p1, p2, view)
       mp = Geom::Point3d.new 
+      # calculate the median betwen the two points, p1 and p2
       mp.x = (p1.x + p2.x) / 2.0  
       mp.y = (p1.y + p2.y) / 2.0  
       mp.z = (p1.z + p2.z) / 2.0  
+      # output to the Ruby console for debugging
       puts "p1 x=" + p1.x.to_s() + ", y=" + p1.y.to_s() + ", z=" + p1.z.to_s()
       puts "p2 x=" + p2.x.to_s() + ", y=" + p2.y.to_s() + ", z=" + p2.z.to_s()
       puts "mp x=" + mp.x.to_s() + ", y=" + mp.y.to_s() + ", z=" + mp.z.to_s()
